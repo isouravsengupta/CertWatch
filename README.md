@@ -126,5 +126,4 @@ Use `docs/slack-setup.md` for a step-by-step setup and test checklist.
 
 ## Demo presentation guide
 
-- Scripted talk track: `docs/demo-presentation-script.md`
 - One-command demo runner: `scripts/demo_run.sh`
