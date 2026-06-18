@@ -1,0 +1,44 @@
+name: CertWatch Daily Scan
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run CertWatch scan
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          if [ -n "${SLACK_WEBHOOK_URL:-}" ]; then
+            python3 risk_scorer.py \
+              --input sample_certs.csv \
+              --endpoints-csv sample_endpoints.csv \
+              --output-json report_with_endpoints.json \
+              --slack-webhook-url "${SLACK_WEBHOOK_URL}" \
+              --slack-top-n 5
+          else
+            python3 risk_scorer.py \
+              --input sample_certs.csv \
+              --endpoints-csv sample_endpoints.csv \
+              --output-json report_with_endpoints.json
+          fi
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: certwatch-report
+          path: report_with_endpoints.json

@@ -4,6 +4,8 @@ CertWatch is an MVP for detecting certificate outage risk before incidents happe
 It models a common PKI operations challenge: shrinking certificate lifetimes make
 manual renewal workflows unreliable at scale.
 
+**Tagline:** Proactive certificate risk intelligence for zero-downtime trust.
+
 ## What it does
 
 - Reads certificate metadata from CSV.
@@ -23,6 +25,25 @@ manual renewal workflows unreliable at scale.
   operational reality.
 - Highlights where automation gaps create immediate production risk.
 - Provides a foundation for dashboarding and alerting.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[Certificate Inventory CSV] --> D[CertWatch Scoring Engine]
+    B[TLS Endpoints CSV] --> C[Live Endpoint Scanner]
+    C --> D
+    D --> E[JSON Risk Report]
+    D --> F[Terminal Summary]
+    D --> G[Slack Alert Webhook]
+```
+
+## Quick demo flow
+
+1. Run CertWatch with inventory + endpoint scan.
+2. Show top risk entries and explain why each scored high.
+3. Send top risks to Slack channel.
+4. Explain production next step: schedule daily run + ownership routing.
 
 ## Run (inventory only)
 
@@ -52,6 +73,19 @@ python3 risk_scorer.py \
   --slack-webhook-url "https://hooks.slack.com/services/XXX/YYY/ZZZ" \
   --slack-top-n 5
 ```
+
+## Run daily in GitHub Actions
+
+The repo includes `.github/workflows/daily-scan.yml` which:
+
+- runs once per day (UTC)
+- executes CertWatch against your CSVs
+- uploads the JSON report as a workflow artifact
+- optionally posts Slack alerts when `SLACK_WEBHOOK_URL` is configured
+
+Set repository secret:
+
+- `SLACK_WEBHOOK_URL` (optional but recommended)
 
 ## CSV schema
 
@@ -84,3 +118,8 @@ Required columns:
 - Add Slack slash commands (`/cert-risk`) and ticket creation actions.
 - Emit PagerDuty alerts for critical scores.
 - Track policy compliance for 200-day and future 47-day windows.
+- Add issue/ticket auto-creation for `critical` risks.
+
+## Slack setup guide
+
+Use `docs/slack-setup.md` for a step-by-step setup and test checklist.
