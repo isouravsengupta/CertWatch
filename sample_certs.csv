@@ -1,0 +1,7 @@
+service_name,owner_team,environment,cert_id,expires_on,renewal_automated,criticality
+payments-api,Commerce Security,prod,cert-pay-001,2026-06-22,false,high
+billing-worker,Revenue Platform,prod,cert-bill-091,2026-07-05,true,high
+analytics-ingest,Data Infra,stage,cert-ana-202,2026-08-10,false,medium
+search-indexer,Search Platform,prod,cert-sea-300,2026-12-01,true,medium
+internal-chatbot,AI Productivity,prod,cert-ai-021,2026-06-19,false,high
+dev-portal,Developer Experience,dev,cert-dev-888,2027-01-15,true,low

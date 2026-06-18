@@ -1,0 +1,4 @@
+service_name,owner_team,environment,endpoint,port,renewal_automated,criticality
+public-example,External Integrations,prod,example.com,443,true,medium
+github-api,Developer Platform,prod,api.github.com,443,true,high
+failing-endpoint,Legacy Platform,prod,expired.badssl.com,443,false,high
